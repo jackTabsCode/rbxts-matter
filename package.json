@@ -20,5 +20,8 @@
 		"@rbxts/plasma": "^0.4.5",
 		"@rbxts/types": "^1.0.810",
 		"roblox-ts": "^3.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
