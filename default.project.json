@@ -1,6 +1,6 @@
 {
-  "name": "matter",
-  "tree": {
-    "$path": "lib"
-  }
+	"name": "matter",
+	"tree": {
+		"$path": "out"
+	}
 }
