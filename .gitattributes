@@ -1,2 +1,15 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+package.json merge=ours
+.gitignore merge=ours
+README.md merge=ours
+.github/* merge=ours
+pinned/* merge=ours
+docs/* merge=ours
+pages/* merge=ours
+example/* merge=ours
+benchmarks/* merge=ours
+.moonwave/* merge=ours
+*.project.json merge=ours
+tsconfig.json merge=ours
