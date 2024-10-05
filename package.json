@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/matter-jack",
-	"version": "0.8.4",
+	"version": "0.9.0-nightly.8811159",
 	"description": "A modern ECS library for Roblox",
 	"main": "lib/init.luau",
 	"scripts": {
