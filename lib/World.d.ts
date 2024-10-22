@@ -15,10 +15,6 @@ export type Entity<T = ComponentBundle> = number & {
  */
 export type AnyEntity = Entity
 
-type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <A>() => A extends A1 ? 1 : 0 ? 1 : 0
-
-type Includes<T, V> = T extends [infer F, ...infer R] ? (Equals<F, V> extends 1 ? true : Includes<R, V>) : false
-
 type NullableArray<A extends Array<unknown>> = Partial<A> extends Array<unknown> ? Partial<A> : never
 
 /**
@@ -29,41 +25,41 @@ type NullableArray<A extends Array<unknown>> = Partial<A> extends Array<unknown>
  * Entities are simply ever-increasing integers.
  */
 
-export interface World extends IterableFunction<LuaTuple<[AnyEntity, Map<ComponentCtor, AnyComponent>]>> {}
+export interface World extends IterableFunction<LuaTuple<[AnyEntity, Map<ComponentCtor<object>, AnyComponent>]>> {}
 
 export class World {
 	public constructor()
 
 	/**
 	 * Spawns a new entity in the world with the given components.
-	 * @param component_bundle - The component values to spawn the entity with.
+	 * @param components - The component values to spawn the entity with.
 	 * @return The new entity ID.
 	 */
-	public spawn<T extends ComponentBundle>(...component_bundle: T): Entity<T>
+	public spawn<T extends ComponentBundle>(...components: T): Entity<T>
 
 	/**
 	 * Spawns a new entity in the world with a specific entity ID and given components.
 	 * The next ID generated from [World:spawn] will be increased as needed to never collide with a manually specified ID.
-	 * @param id - The entity ID to spawn with.
-	 * @param component_bundle - The component values to spawn the entity with.
+	 * @param entity - The entity ID to spawn with.
+	 * @param components - The component values to spawn the entity with.
 	 * @see {@link id Entity}
 	 */
-	public spawnAt<T extends ComponentBundle>(id: number, ...component_bundle: T): Entity<T>
+	public spawnAt<T extends ComponentBundle>(id: number, ...components: T): Entity<T>
 	/**
 	 * Replaces a given entity by ID with an entirely new set of components.
 	 * Equivalent to removing all components from an entity, and then adding these ones.
-	 * @param id - The entity ID
-	 * @param component_bundle {@link ComponentBundle ComponentBundle} - The component values to spawn the entity with.
-	 * @see {@link id AnyEntity}
+	 * @param entity - The entity ID
+	 * @param components {@link ComponentBundle ComponentBundle} - The component values to spawn the entity with.
+	 * @see {@link entity AnyEntity}
 	 */
-	public replace<T extends ComponentBundle>(id: AnyEntity, ...component_bundle: T): Entity<T>
+	public replace<T extends ComponentBundle>(entity: AnyEntity, ...components: T): Entity<T>
 
 	/**
 	 * Despawns a given entity by ID, removing it and all its components from the world entirely.
-	 * @param id - The entity ID
+	 * @param entity - The entity ID
 	 * @see {@link id AnyEntity}
 	 */
-	public despawn(id: AnyEntity): void
+	public despawn(entity: AnyEntity): void
 
 	/**
 	 * Removes all entities from the world.
@@ -75,65 +71,56 @@ export class World {
 	/**
 	 * Checks if the given entity ID is currently spawned in this world.
 	 *
-	 * @param id number - The entity ID
+	 * @param entity number - The entity ID
 	 * @returns boolean - `true` if the entity exists
 	 * @see {@link AnyEntity AnyEntity}
 	 */
-	public contains(id: AnyEntity): boolean
+	public contains(entity: AnyEntity): boolean
 
 	/**
 	 * Gets a specific component from a specific entity in this world.
 	 *
 	 * @param entity - The entity ID
-	 * @param only - The component to fetch
+	 * @param component - The component to fetch
 	 * @returns Returns the component values in the same order they were passed to.
 	 * @remarks
 	 * Component value returned is nullable if it isn't associated with the entity (in real-time).
 	 */
-	public get<T extends ComponentCtor>(entity: AnyEntity, only: T): ReturnType<T> | undefined
+	public get<T extends ComponentCtor<any>>(entity: AnyEntity, component: T): ReturnType<T> | undefined
 
 	/**
 	 * Gets multiple components from a specific entity in this world.
 	 *
 	 * @param entity - The entity ID
-	 * @param bundle - The components to fetch
+	 * @param components - The components to fetch
 	 * @returns Returns the component values in the same order they were passed to.
 	 * @remarks
 	 * Component values returned are nullable if the components used to search for aren't associated with the entity (in real-time).
 	 */
-	public get<a extends Entity, T extends ComponentCtor>(
-		entity: a,
-		only: T,
-	): Includes<a extends Entity<infer A> ? A : never, ReturnType<T>> extends true
-		? ReturnType<T>
-		: ReturnType<T> | undefined
-	public get<T extends DynamicBundle>(entity: AnyEntity, ...bundle: T): LuaTuple<NullableArray<InferComponents<T>>>
-
-	public get<T extends DynamicBundle>(entity: Entity<T>, ...bundle: T): LuaTuple<InferComponents<T>>
-	public get<a, T extends DynamicBundle>(
-		entity: a,
-		...bundle: T
-	): LuaTuple<a extends Entity<InferComponents<T>> ? InferComponents<T> : NullableArray<InferComponents<T>>>
+	public get<T extends [...ComponentCtor<any>[]]>(
+		entity: AnyEntity,
+		...components: T
+	): LuaTuple<NullableArray<InferComponents<T>>>
 
 	/**
 	 * Performs a query against the entities in this World. Returns a [QueryResult](/api/QueryResult), which iterates over
 	 * the results of the query.
 
 	 * Order of iteration is not guaranteed.
-	 * @param dynamic_bundle
+	 * @param components
 	 * @returns QueryResult - See {@link QueryResult QueryResult}
 	 */
-	public query<T extends DynamicBundle, a extends InferComponents<T>>(...dynamic_bundle: T): QueryResult<a>
+	public query<T extends DynamicBundle, a extends InferComponents<T>>(...components: T): QueryResult<a>
 
-	public queryChanged<C extends ComponentCtor>(
+	public queryChanged<C extends ComponentCtor<any>>(
 		mt: C,
 	): IterableFunction<
 		LuaTuple<[Entity<[ReturnType<C>]>, { new: ReturnType<C> | undefined; old: ReturnType<C> | undefined }]>
 	>
 
-	public insert(id: AnyEntity, ...dynamic_bundle: ComponentBundle): void
+	public insert(id: AnyEntity, ...components: ComponentBundle): void
 
-	public remove<T extends DynamicBundle>(id: AnyEntity, ...dynamic_bundle: T): LuaTuple<InferComponents<T>>
+	public remove<T extends DynamicBundle>(id: AnyEntity, ...components: T): LuaTuple<InferComponents<T>>
 
 	public size(): number
 

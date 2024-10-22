@@ -21,7 +21,8 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noUnsafeDeclarationMerging": "off"
+				"noUnsafeDeclarationMerging": "off",
+				"noExplicitAny": "off"
 			}
 		}
 	},
