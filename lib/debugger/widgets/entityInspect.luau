@@ -39,20 +39,7 @@ return function(plasma)
 				end
 
 				local items = { { "Component", "Data" } }
-<<<<<<< HEAD
-
-				local location = world.allEntities[debugger.debugEntity]
-				local archetype = location.archetype
-				local indexInArchetype = location.indexInArchetype
-
-				for index, field in archetype.fields do
-					local componentId = archetype.componentIds[index]
-					local component = world.componentIdToComponent[componentId]
-					local data = field[indexInArchetype]
-
-=======
 				for component, componentData in getAllComponentData(world, debugger.debugEntity) do
->>>>>>> main
 					table.insert(items, {
 						tostring(component),
 						formatTable(componentData, FormatMode.Long),
