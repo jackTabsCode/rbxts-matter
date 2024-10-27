@@ -1,4 +1,5 @@
 local formatTableModule = require(script.Parent.Parent.formatTable)
+local getAllComponentData = require(script.Parent.Parent.getAllComponentData)
 local formatTable = formatTableModule.formatTable
 local FormatMode = formatTableModule.FormatMode
 
@@ -38,6 +39,7 @@ return function(plasma)
 				end
 
 				local items = { { "Component", "Data" } }
+<<<<<<< HEAD
 
 				local location = world.allEntities[debugger.debugEntity]
 				local archetype = location.archetype
@@ -48,9 +50,12 @@ return function(plasma)
 					local component = world.componentIdToComponent[componentId]
 					local data = field[indexInArchetype]
 
+=======
+				for component, componentData in getAllComponentData(world, debugger.debugEntity) do
+>>>>>>> main
 					table.insert(items, {
 						tostring(component),
-						formatTable(data, FormatMode.Long),
+						formatTable(componentData, FormatMode.Long),
 					})
 				end
 
