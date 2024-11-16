@@ -1,6 +1,6 @@
 {
 	"name": "@jackctaylor/matter",
-	"version": "0.9.0-nightly.25e74bf.1",
+	"version": "0.9.0-beta.0",
 	"description": "A modern ECS library for Roblox",
 	"main": "lib/init.luau",
 	"scripts": {
