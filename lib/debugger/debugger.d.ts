@@ -62,6 +62,8 @@ declare class Debugger<T extends Array<unknown>> {
 	public getWidgets(): Widgets
 
 	public loopParameterNames: Array<string>
+
+	public raycastParams: RaycastParams
 }
 
 export = Debugger
